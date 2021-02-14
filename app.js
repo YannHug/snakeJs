@@ -74,3 +74,25 @@ function moveSnack() {
 
 drawSnake();
 animation();
+
+document.addEventListener('keydown', changeDirection);
+
+function changeDirection(event) {
+
+  const KEY_LEFT = 37;
+  const KEY_RIGHT = 39;
+  const KEY_UP = 38;
+  const KEY_DOWN = 40;
+
+  const direction = event.keyCode;
+
+  const up = vy === -10;
+  const down = vy === 10;
+  const right = vx === 10;
+  const left = vx === -10;
+  
+  if (direction === KEY_LEFT && !right) { vx = -10; vy = 0; }
+  if (direction === KEY_RIGHT && !left) { vx = 10; vy = 0; }
+  if (direction === KEY_UP && !down) { vx = 0; vy = -10; }
+  if (direction === KEY_DOWN && !up) { vx = 0; vy = 10; }
+}

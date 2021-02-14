@@ -36,17 +36,27 @@ let snake = [{
 ]
 
 function animation() {
-  setTimeout(function () {
-    bugDirection = false;
-    cleanCanvas();
-    drawApple();
-    moveSnack();
-    if (endGame()) {
-      return;
-    }
-    drawSnake();
-    animation();
-  }, 100);
+
+  if (endGame === true) {
+    return;
+  } else {
+    setTimeout(function () {
+      bugDirection = false;
+  
+      cleanCanvas();
+      drawApple();
+      moveSnack();
+  
+      if (endGame()) {
+        restart();
+        return;
+      }
+  
+      drawSnake();
+      animation();
+    }, 100);
+  }
+
 }
 
 function cleanCanvas() {
@@ -82,6 +92,13 @@ function moveSnack() {
     y: snake[0].y + vy
   };
   snake.unshift(head);
+
+  if (endGame()){
+    snake.shift(head);
+    restart();
+    endGame(true);
+    return;
+  }
 
   const snakeEatApple = snake[0].x === appleX && snake[0].y === appleY;
 
@@ -188,6 +205,21 @@ function endGame() {
 
 }
 
-drawSnake();
-animation();
-createApple();
+function restart() {
+  const restart = document.querySelector('#restart');
+  restart.style.display = "block";
+
+  document.addEventListener('keydown', (e) => {
+    if (e.code === "Space") {
+      document.location.reload();
+    }
+  })
+}
+
+function init() {
+  drawSnake();
+  createApple();
+  animation();
+} 
+
+init();

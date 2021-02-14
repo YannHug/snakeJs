@@ -11,6 +11,8 @@ let vy = 0;
 let appleX = 0;
 // Apple Y
 let appleY = 0;
+// Score
+let score = 0;
 
 let snake = [{
     x: 140,
@@ -35,6 +37,9 @@ function animation() {
     cleanCanvas();
     drawApple();
     moveSnack();
+    if (endGame()) {
+      return;
+    }
     drawSnake();
     animation();
   }, 100);
@@ -73,7 +78,17 @@ function moveSnack() {
     y: snake[0].y + vy
   };
   snake.unshift(head);
-  snake.pop();
+
+  const snakeEatApple = snake[0].x === appleX && snake[0].y === appleY;
+
+  if (snakeEatApple) {
+    score += 10;
+    document.querySelector('#score').innerHTML = score;
+    createApple();
+  } else {
+    snake.pop();
+  }
+
 }
 
 document.addEventListener('keydown', changeDirection);
@@ -121,8 +136,6 @@ function createApple() {
   appleX = randomApple();
   appleY = randomApple();
 
-  console.log(appleX, appleY);
-
   snake.forEach(function (piece) {
     const snakeOnApple = piece.x == appleX && piece.y == appleY;
     if (snakeOnApple) {
@@ -140,6 +153,31 @@ function drawApple() {
   ctx.arc(appleX + 5, appleY + 5, 5, 0, 2 * Math.PI);
   ctx.fill();
   ctx.stroke();
+
+}
+
+function endGame() {
+
+  let snakeHeadless = snake.slice(1, -1);
+  let bitten = false;
+  snakeHeadless.forEach(piece => {
+    if (piece.x === snake[0].x && piece.y === snake[0].y) {
+      bitten = true;
+    }
+  });
+
+  const touchLeftWall = snake[0].x < -1;
+  const touchRightWall = snake[0].x > canvas.width -10 ;
+  const touchUpWall = snake[0].y < -1;
+  const touchDownWall = snake[0].y > canvas.height - 10;
+  
+  let gameOver = false;
+
+  if (bitten || touchDownWall || touchUpWall || touchRightWall || touchLeftWall) {
+    gameOver = true;
+  }
+
+  return gameOver;
 
 }
 

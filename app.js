@@ -1,8 +1,7 @@
 const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext('2d');
 
-// Variables
-
+// Variables :
 // Speed x
 let vx = 10;
 // Speed y
@@ -13,6 +12,10 @@ let appleX = 0;
 let appleY = 0;
 // Score
 let score = 0;
+// Bug Direction
+let bugDirection = false;
+
+//-------------------------------//
 
 let snake = [{
     x: 140,
@@ -34,6 +37,7 @@ let snake = [{
 
 function animation() {
   setTimeout(function () {
+    bugDirection = false;
     cleanCanvas();
     drawApple();
     moveSnack();
@@ -94,6 +98,9 @@ function moveSnack() {
 document.addEventListener('keydown', changeDirection);
 
 function changeDirection(event) {
+
+  if (bugDirection) return;
+  bugDirection = true;
 
   const KEY_LEFT = 37;
   const KEY_RIGHT = 39;
